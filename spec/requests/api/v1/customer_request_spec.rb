@@ -25,6 +25,32 @@ describe 'Customers API' do
       expect(customers["data"].first["id"]).to eq(customer.id.to_s)
       expect(customers["data"].first["attributes"]["first_name"]).to eq(customer.first_name)
     end
+    
+    it 'can find all customers by first_name' do
+      customer_1 = create(:customer)
+      customer_2 = create(:customer, first_name: "Joe")
+      customer_3 = create(:customer, first_name: "Joe")
+      
+      get "/api/v1/customers/find_all?first_name=#{customer_2.first_name}"
+      customers = JSON.parse(response.body)
+      
+      expect(customers["data"].count).to eq(2)
+      expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
+      expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
+    end
+    
+    it 'can find all customers by last_name' do
+      customer_1 = create(:customer)
+      customer_2 = create(:customer, last_name: "Bob")
+      customer_3 = create(:customer, last_name: "Bob")
+      
+      get "/api/v1/customers/find_all?last_name=#{customer_2.last_name}"
+      customers = JSON.parse(response.body)
+      
+      expect(customers["data"].count).to eq(2)
+      expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
+      expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
+    end
   end
 
   
