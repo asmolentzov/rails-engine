@@ -1,7 +1,13 @@
 class Api::V1::Customers::SearchController < ApplicationController
   
   def index
-    customer = Customer.where(id: params[:id])
+    if params[:id]
+      customer = Customer.where(id: params[:id])
+    elsif params[:first_name]
+      customer = Customer.where(first_name: params[:first_name])
+    elsif params[:last_name]
+      customer = Customer.where(last_name: params[:last_name])
+    end
     render json: CustomerSerializer.new(customer)
   end
   
