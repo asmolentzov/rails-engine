@@ -29,8 +29,16 @@ describe 'Customers API' do
       get "/api/v1/customers/find?first_name=#{@customer.first_name}"
     end
     
+    it 'can find a single customer based on case-insensitive first_name' do
+      get "/api/v1/customers/find?first_name=#{@customer.first_name.upcase}"
+    end
+    
     it 'can find a single customer based on its last name' do
       get "/api/v1/customers/find?last_name=#{@customer.last_name}"
+    end
+    
+    it 'can find a single customer based on case-insensitive last_name' do
+      get "/api/v1/customers/find?last_name=#{@customer.last_name.upcase}"
     end
     
     it 'can find a single customer based on created_at' do
@@ -50,5 +58,4 @@ describe 'Customers API' do
       expect(returned_customer["data"]["attributes"]["first_name"]).to eq(@customer.first_name)
     end
   end
-  
 end
