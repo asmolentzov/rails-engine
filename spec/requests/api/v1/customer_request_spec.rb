@@ -12,25 +12,29 @@ describe 'Customers API' do
     expect(customers.count).to eq(3)
   end
   
-  it 'can get a single customer by its id' do
-    customer = create(:customer)
+  describe 'for a single customer' do
+    before(:each) do
+      @customer = create(:customer)
+    end
     
-    get "/api/v1/customers/#{customer.id}"
+    it 'can get a single customer by its id' do
+      get "/api/v1/customers/#{@customer.id}"
+    end
     
-    returned_customer = JSON.parse(response.body)
+    it 'can find a single customer based on its id' do
+      get "/api/v1/customers/find?id=#{@customer.id}"
+    end
     
-    expect(response).to be_successful
-    expect(returned_customer["id"]).to eq(customer.id)
+    it 'can find a single customer based on its first name' do
+      get "/api/v1/customers/find?first_name=#{@customer.first_name}"
+    end
+    
+    after(:each) do
+      returned_customer = JSON.parse(response.body)
+    
+      expect(response).to be_successful
+      expect(returned_customer["id"]).to eq(@customer.id)
+    end
   end
   
-  it 'can find a single customer based on its id' do
-    customer = create(:customer)
-    
-    get "/api/v1/customers/find?id=#{customer.id}"
-    
-    returned_customer = JSON.parse(response.body)
-    
-    expect(response).to be_successful
-    expect(returned_customer["id"]).to eq(customer.id)
-  end
 end
