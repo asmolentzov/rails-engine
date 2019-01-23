@@ -1,16 +1,31 @@
 require 'rails_helper'
 
 describe 'Customers API' do
-  it 'sends a list of customers' do
-    create_list(:customer, 3)
+  describe 'for a collection of customers' do
+    before(:each) do
+      @customer_list = create_list(:customer, 3)
+    end
+    it 'sends a list of customers' do
+      get '/api/v1/customers'
+      
+      expect(response).to be_successful
+      
+      customers = JSON.parse(response.body)
+      expect(customers["data"].count).to eq(3)
+    end   
     
-    get '/api/v1/customers'
-    
-    expect(response).to be_successful
-    
-    customers = JSON.parse(response.body)
-    expect(customers["data"].count).to eq(3)
+    it 'can find all customers by id' do
+      customer = @customer_list.first
+      get "/api/v1/customers/find_all?id=#{customer.id}"
+      
+      expect(response).to be_successful
+      
+      customers = JSON.parse(response.body)
+      expect(customers["data"].count).to eq(1)
+      expect(customers["data"]["attributes"]["first_name"]).to eq(customer.first_name)
+    end
   end
+
   
   describe 'for a single customer' do
     before(:each) do
