@@ -20,7 +20,6 @@ describe 'Customers API' do
     returned_customer = JSON.parse(response.body)
     
     expect(response).to be_successful
-    expect(returned_customer["name"]).to eq(customer.name)
     expect(returned_customer["id"]).to eq(customer.id)
   end
 end
