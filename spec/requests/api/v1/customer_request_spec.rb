@@ -29,6 +29,18 @@ describe 'Customers API' do
       get "/api/v1/customers/find?first_name=#{@customer.first_name}"
     end
     
+    it 'can find a single customer based on its last name' do
+      get "/api/v1/customers/find?last_name=#{@customer.last_name}"
+    end
+    
+    it 'can find a single customer based on created_at' do
+      get "/api/v1/customers/find?created_at=#{@customer.created_at}"
+    end
+    
+    it 'can find a single customer based on updated_at' do
+      get "/api/v1/customers/find?updated_at=#{@customer.updated_at}"
+    end
+    
     after(:each) do
       returned_customer = JSON.parse(response.body)
     
