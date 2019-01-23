@@ -26,7 +26,7 @@ describe 'Customers API' do
   it 'can find a single customer based on its id' do
     customer = create(:customer)
     
-    get "/api/v1/customers/find?#{customer.id}"
+    get "/api/v1/customers/find?id=#{customer.id}"
     
     returned_customer = JSON.parse(response.body)
     
