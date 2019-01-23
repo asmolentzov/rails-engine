@@ -1,5 +1,10 @@
 class Api::V1::Customers::SearchController < ApplicationController
   
+  def index
+    customer = Customer.where(id: params[:id])
+    render json: CustomerSerializer.new(customer)
+  end
+  
   def show
     if params[:id]
       customer = Customer.find(params[:id])
