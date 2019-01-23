@@ -10,3 +10,4 @@ desc "Imports customers from CSV file"
 task :import_customers => :environment do
   ruby '-r "./lib/tasks/csv_importer.rb" -e "import_customers"'
 end
+
