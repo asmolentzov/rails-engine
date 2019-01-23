@@ -34,6 +34,16 @@ describe 'Customers API' do
       get "/api/v1/customers/find_all?first_name=#{customer_2.first_name}"
       customers = JSON.parse(response.body)
       
+      expect(response).to be_successful
+      expect(customers["data"].count).to eq(2)
+      expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
+      expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
+      
+      # Case insensitive
+      get "/api/v1/customers/find_all?first_name=#{customer_2.first_name.upcase}"
+      customers = JSON.parse(response.body)
+      
+      expect(response).to be_successful
       expect(customers["data"].count).to eq(2)
       expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
       expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
@@ -47,12 +57,43 @@ describe 'Customers API' do
       get "/api/v1/customers/find_all?last_name=#{customer_2.last_name}"
       customers = JSON.parse(response.body)
       
+      expect(response).to be_successful
+      expect(customers["data"].count).to eq(2)
+      expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
+      expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
+      
+      # Case insensitive
+      get "/api/v1/customers/find_all?last_name=#{customer_2.last_name.upcase}"
+      customers = JSON.parse(response.body)
+      
+      expect(response).to be_successful
       expect(customers["data"].count).to eq(2)
       expect(customers["data"].first["id"]).to eq(customer_2.id.to_s)
       expect(customers["data"].last["id"]).to eq(customer_3.id.to_s)
     end
+    
+    it 'can find all customers by created_at' do
+      customer = @customer_list.first
+      get "/api/v1/customers/find_all?created_at=#{customer.created_at}"
+      
+      customers = JSON.parse(response.body)
+      
+      expect(response).to be_successful
+      expect(customers["data"].count).to eq(3)
+      expect(customers["data"].first["id"]).to eq(customer.id.to_s)
+    end
+    
+    it 'can find all customers by updated_at' do
+      customer = @customer_list.first
+      get "/api/v1/customers/find_all?updated_at=#{customer.updated_at}"
+      
+      customers = JSON.parse(response.body)
+      
+      expect(response).to be_successful
+      expect(customers["data"].count).to eq(3)
+      expect(customers["data"].first["id"]).to eq(customer.id.to_s)
+    end
   end
-
   
   describe 'for a single customer' do
     before(:each) do
