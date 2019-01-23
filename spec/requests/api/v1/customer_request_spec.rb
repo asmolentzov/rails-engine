@@ -149,7 +149,7 @@ describe 'Customers API' do
     
     customer = JSON.parse(response.body)
     expect(response).to be_successful
-    expect(customer["data"].count).to eq(1)
+    expect(customer.count).to eq(1)
     expect(customer["data"]["type"]).to eq("customer")
   end
 end
