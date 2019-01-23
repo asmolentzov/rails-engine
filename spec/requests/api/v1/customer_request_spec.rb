@@ -33,19 +33,21 @@ describe 'Customers API' do
       get "/api/v1/customers/find?last_name=#{@customer.last_name}"
     end
     
-    it 'can find a single customer based on created_at' do
-      get "/api/v1/customers/find?created_at=#{@customer.created_at}"
-    end
-    
-    it 'can find a single customer based on updated_at' do
-      get "/api/v1/customers/find?updated_at=#{@customer.updated_at}"
-    end
+    # it 'can find a single customer based on created_at' do
+    #   get "/api/v1/customers/find?created_at=#{@customer.created_at}"
+    # end
+    # 
+    # it 'can find a single customer based on updated_at' do
+    #   get "/api/v1/customers/find?updated_at=#{@customer.updated_at}"
+    # end
     
     after(:each) do
       returned_customer = JSON.parse(response.body)
     
       expect(response).to be_successful
-      expect(returned_customer["id"]).to eq(@customer.id)
+      expect(returned_customer["data"]["id"]).to eq(@customer.id)
+      expect(returned_customer["data"]["type"]).to eq("customer")
+      expect(returned_customer["data"]["attributes"]["name"]).to eq(@customer.name)
     end
   end
   
