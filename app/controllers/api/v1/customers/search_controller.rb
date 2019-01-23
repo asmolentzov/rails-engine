@@ -12,7 +12,7 @@ class Api::V1::Customers::SearchController < ApplicationController
     elsif params[:updated_at]
       customer = Customer.find_by(updated_at: params[:updated_at])
     end
-    render json: customer
+    render json: CustomerSerializer.new(customer)
   end
   
 end
