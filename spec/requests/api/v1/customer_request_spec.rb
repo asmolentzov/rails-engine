@@ -74,7 +74,7 @@ describe 'Customers API' do
     
     it 'can find all customers by created_at' do
       customer = @customer_list.first
-      get "/api/v1/customers/find_all?created_at=#{customer.created_at}"
+      get "/api/v1/customers/find_all?created_at=#{customer.created_at.to_s}"
       
       customers = JSON.parse(response.body)
       
@@ -85,7 +85,7 @@ describe 'Customers API' do
     
     it 'can find all customers by updated_at' do
       customer = @customer_list.first
-      get "/api/v1/customers/find_all?updated_at=#{customer.updated_at}"
+      get "/api/v1/customers/find_all?updated_at=#{customer.updated_at.to_s}"
       
       customers = JSON.parse(response.body)
       
@@ -125,11 +125,11 @@ describe 'Customers API' do
     end
     
     it 'can find a single customer based on created_at' do
-      get "/api/v1/customers/find?created_at=#{@customer.created_at}"
+      get "/api/v1/customers/find?created_at=#{@customer.created_at.to_s}"
     end
     
     it 'can find a single customer based on updated_at' do
-      get "/api/v1/customers/find?updated_at=#{@customer.updated_at}"
+      get "/api/v1/customers/find?updated_at=#{@customer.updated_at.to_s}"
     end
     
     after(:each) do
