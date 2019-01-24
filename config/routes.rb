@@ -9,6 +9,12 @@ Rails.application.routes.draw do
         get 'random', to: 'random#show'
       end
       resources :customers, only: [:index, :show]
+      
+      resources :merchants, only: [:index] do
+        scope module: :merchants do
+          get 'revenue', to: 'revenue#index'
+        end
+      end
     end
   end
 end
