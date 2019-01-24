@@ -29,10 +29,10 @@ describe 'Merchants API' do
       get "/api/v1/merchants/find?name=#{@merchant.name}"
     end
     it 'can find a single merchant by created_at' do
-      get "/api/v1/merchants/find?created_at#{merchant.created_at}"
+      get "/api/v1/merchants/find?created_at=#{@merchant.created_at}"
     end
     it 'can find a single merchant by updated_at' do
-      get "/api/v1/merchants/find?updated_at#{merchant.updated_at}"
+      get "/api/v1/merchants/find?updated_at=#{@merchant.updated_at}"
     end
     after(:each) do
       returned_merchant = JSON.parse(response.body)
