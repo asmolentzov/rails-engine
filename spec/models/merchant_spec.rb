@@ -5,6 +5,48 @@ RSpec.describe Merchant, type: :model do
     it { should validate_presence_of(:name) }
   end
   
+  describe 'Class Methods' do
+    describe '.merchants_by_revenue' do
+      it 'should return the top x merchants ranked by total revenue' do
+        merchant_1 = create(:merchant)
+        item_m1_1 = create(:item, merchant: merchant_1)
+        invoice_m1_1 = create(:invoice, merchant: merchant_1)
+        invoice_item = create(:invoice_item, invoice: invoice_m1_1, item: item_m1_1, unit_price: 1, quantity: 1)
+        create(:transaction, invoice: invoice_m1_1, result: "success")
+        
+        merchant_2 = create(:merchant)
+        item_m2_2 = create(:item, merchant: merchant_2)
+        invoice_m2_2 = create(:invoice, merchant: merchant_2)
+        invoice_item = create(:invoice_item, invoice: invoice_m2_2, item: item_m2_2, unit_price: 15, quantity: 2)
+        create(:transaction, invoice: invoice_m2_2, result: "success")
+        
+        merchant_3 = create(:merchant)
+        item_m3_3 = create(:item, merchant: merchant_3)
+        invoice_m3_3 = create(:invoice, merchant: merchant_3)
+        invoice_item = create(:invoice_item, invoice: invoice_m3_3, item: item_m3_3, unit_price: 100, quantity: 3)
+        create(:transaction, invoice: invoice_m3_3, result: "failed")
+        
+        merchant_4 = create(:merchant)
+        item_m4_4 = create(:item, merchant: merchant_4)
+        invoice_m4_4 = create(:invoice, merchant: merchant_4)
+        invoice_item = create(:invoice_item, invoice: invoice_m4_4, item: item_m4_4, unit_price: 4, quantity: 10)
+        create(:transaction, invoice: invoice_m4_4, result: "success")
+        
+        merchant_5 = create(:merchant)
+        item_m5_5 = create(:item, merchant: merchant_5)
+        invoice_m5_5 = create(:invoice, merchant: merchant_5)
+        invoice_item = create(:invoice_item, invoice: invoice_m5_5, item: item_m5_5, unit_price: 5, quantity: 5)
+        create(:transaction, invoice: invoice_m5_5, result: "success")
+        
+        merchants = [merchant_4, merchant_2]
+        expect(Merchant.merchants_by_revenue(2)).to eq(merchants)
+        
+        merchants = [merchant_4, merchant_2, merchant_5]
+        expect(Merchant.merchants_by_revenue(3)).to eq(merchants)
+      end
+    end
+  end
+  
   describe 'Instance Methods' do
     describe '#total_revenue' do
       it 'should return the total revenue for a merchant across successful transactions' do
@@ -17,7 +59,7 @@ RSpec.describe Merchant, type: :model do
         invoice_item_2 = create(:invoice_item, item: item, invoice: invoice_2, unit_price: 2, quantity: 5)
         
         # Check failing transaction
-        create(:transaction, invoice: invoice, result: "fail")
+        create(:transaction, invoice: invoice, result: "failed")
         expect(merchant.total_revenue).to eq(0)
         
         # Check successful transaction
