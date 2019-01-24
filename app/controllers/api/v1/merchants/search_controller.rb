@@ -14,7 +14,11 @@ class Api::V1::Merchants::SearchController < ApplicationController
   end
   
   def index
-    merchants = Merchant.where(id: params[:id])
+    if params[:id]
+      merchants = Merchant.where(id: params[:id])
+    elsif params[:name]
+      merchants = Merchant.where(name: params[:name])
+    end
     render json: MerchantSerializer.new(merchants)
   end
 end
