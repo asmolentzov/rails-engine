@@ -4,7 +4,7 @@ class Merchant < ApplicationRecord
   validates_presence_of :name
   
   def total_revenue
-    invoices.joins(:items)
+    invoices.joins(:invoice_items)
             .joins(:transactions)
             .where(transactions: {result: "success"})
             .sum("invoice_items.quantity * invoice_items.unit_price")

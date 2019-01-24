@@ -45,6 +45,38 @@ RSpec.describe Merchant, type: :model do
         expect(Merchant.merchants_by_revenue(3)).to eq(merchants)
       end
     end
+    
+    describe '.merchants_by_items' do
+      it 'returns the top x merchants ranked by total number of items sold' do
+        merchant_1 = create(:merchant)
+        item_m1_1 = create(:item, merchant: merchant_1)
+        invoice_m1_1 = create(:invoice, merchant: merchant_1)
+        invoice_item = create(:invoice_item, invoice: invoice_m1_1, item: item_m1_1, unit_price: 1, quantity: 1)
+        create(:transaction, invoice: invoice_m1_1, result: "success")
+        
+        merchant_2 = create(:merchant)
+        item_m2_1 = create(:item, merchant: merchant_2)
+        item_m2_2 = create(:item, merchant: merchant_2)
+        item_m2_3 = create(:item, merchant: merchant_2)
+        invoice_m2_1 = create(:invoice, merchant: merchant_2)
+        invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_1, unit_price: 15, quantity: 2)
+        invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_2, unit_price: 1, quantity: 1)
+        invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_3, unit_price: 1, quantity: 10)
+        create(:transaction, invoice: invoice_m2_1, result: "success")
+        
+        merchant_3 = create(:merchant)
+        item_m3_1 = create(:item, merchant: merchant_3)
+        item_m3_2 = create(:item, merchant: merchant_3)
+        item_m3_3 = create(:item, merchant: merchant_3)
+        invoice_m3_1 = create(:invoice, merchant: merchant_3)
+        invoice_item = create(:invoice_item, invoice: invoice_m3_1, item: item_m3_1, unit_price: 15, quantity: 2)
+        invoice_item = create(:invoice_item, invoice: invoice_m3_1, item: item_m3_2, unit_price: 1, quantity: 5)
+        create(:transaction, invoice: invoice_m3_1, result: "success")
+        
+        merchants = [merchant_2, merchant_3]
+        expect(Merchant.merchants_by_items).to eq(merchants)
+      end
+    end
   end
   
   describe 'Instance Methods' do

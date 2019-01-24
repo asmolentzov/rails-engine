@@ -10,6 +10,9 @@ Rails.application.routes.draw do
       end
       resources :customers, only: [:index, :show]
       
+      namespace :merchants do
+        get 'most_revenue', to: 'most_revenue#index'
+      end
       resources :merchants, only: [:index] do
         scope module: :merchants do
           get 'revenue', to: 'revenue#index'
