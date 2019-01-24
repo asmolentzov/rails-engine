@@ -28,6 +28,9 @@ describe 'Merchants API' do
     it 'can find a single merchant by name' do
       get "/api/v1/merchants/find?name=#{@merchant.name}"
     end
+    it 'can find a single merchant by name case insensitive' do
+      get "/api/v1/merchants/find?name=#{@merchant.name.upcase}"
+    end
     it 'can find a single merchant by created_at' do
       get "/api/v1/merchants/find?created_at=#{@merchant.created_at}"
     end

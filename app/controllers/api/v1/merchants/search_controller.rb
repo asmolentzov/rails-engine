@@ -4,7 +4,7 @@ class Api::V1::Merchants::SearchController < ApplicationController
     if params[:id]
       merchant = Merchant.find(params[:id])
     elsif params[:name]
-      merchant = Merchant.find_by(name: params[:name])
+      merchant = Merchant.find_by("name ILIKE ?", params[:name])
     elsif params[:created_at]
       merchant = Merchant.find_by(created_at: params[:created_at])
     elsif params[:updated_at]
