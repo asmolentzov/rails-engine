@@ -12,6 +12,15 @@ describe 'Merchants API' do
       expect(response).to be_successful
       expect(returned_merchants["data"].count).to eq(3)
     end
+    
+    it 'can find all merchants by id' do
+      get "/api/v1/merchants/find_all?id=#{@merchants.first.id}"
+      
+      returned_merchants = JSON.parse(response.body)
+      expect(response).to be_successful
+      expect(returned_merchants["data"].count).to eq(1)
+      expect(returned_merchants["data"].first["attributes"]["id"]).to eq(@merchants.first.id)
+    end
   end
   
   describe 'for a single merchant' do
