@@ -13,18 +13,20 @@ describe 'Merchants API' do
   
   it ' returns the total revenue for a specified merchant across successful transactions' do
     merchant = create(:merchant)
-    item = create(:item, merchant: merchant, unit_price: 10)
+    item = create(:item, merchant: merchant)
     invoice = create(:invoice, merchant: merchant)
-    ii = create(:invoice_item, item: item, invoice: invoice, unit_price: 10, quantity: 2)
-    transaction = create(:transaction, invoice: invoice, result: "success")
-    transaction_2 = create(:transaction, invoice: invoice, result: "fail")
+    invoice_2 = create(:invoice, merchant: merchant)
     
+    create(:invoice_item, item: item, invoice: invoice, unit_price: 10, quantity: 2)
+    create(:invoice_item, item: item, invoice: invoice_2, unit_price: 2, quantity: 5)
+    
+    create(:transaction, invoice: invoice, result: "success")
+    create(:transaction, invoice: invoice_2, result: "success")
     
     get "/api/v1/merchants/#{merchant.id}/revenue"
     
     expect(response).to be_successful
     total = JSON.parse(response.body)
-    # More Testing Here!
-    
+    expect(total["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue)
   end
 end
