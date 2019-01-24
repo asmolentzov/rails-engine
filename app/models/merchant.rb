@@ -4,19 +4,32 @@ class Merchant < ApplicationRecord
   validates_presence_of :name
   
   def total_revenue
-    invoices.joins(:invoice_items)
-            .joins(:transactions)
-            .where(transactions: {result: "success"})
-            .sum("invoice_items.quantity * invoice_items.unit_price")
+    # invoices.joins(:invoice_items, :transactions)
+    #         .where(transactions: {result: "success"})
+    #         .sum("invoice_items.quantity * invoice_items.unit_price")
+            
+    items.joins(invoices: :transactions)
+         .where(transactions: {result: 'success'})
+         .sum("invoice_items.quantity * invoice_items.unit_price")
+
   end
   
   def self.merchants_by_revenue(quantity)
-     Merchant.joins(invoices: :invoice_items)
-              .joins(invoices: :transactions)
+     Merchant.joins(invoices: [:invoice_items, :transactions])
               .where(transactions: {result: "success"})
-              .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS total_revenue")
+              .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
               .group(:id)
-              .order("total_revenue DESC")
+              .order("revenue DESC")
               .limit(quantity)
+  end
+  
+  def self.merchants_by_items(quantity)
+    Merchant.joins(invoices: [:invoice_items, :transactions])
+            .where("transactions.result = 'success'")
+            .select("merchants.*, COUNT(invoice_items.id) AS item_count")
+            .group(:id)
+            .order("item_count DESC")
+            .limit(quantity)
+    
   end
 end

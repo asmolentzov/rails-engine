@@ -80,4 +80,54 @@ describe 'Merchants API' do
     expect(returned_merchants["data"].second["id"]).to eq(merchants.second.id.to_s)
     expect(returned_merchants["data"].last["id"]).to eq(merchants.last.id.to_s)
   end
+  
+  it 'returns the top x merchants ranked by total number of items sold' do
+    merchant_1 = create(:merchant)
+    item_m1_1 = create(:item, merchant: merchant_1)
+    invoice_m1_1 = create(:invoice, merchant: merchant_1)
+    invoice_item = create(:invoice_item, invoice: invoice_m1_1, item: item_m1_1, unit_price: 1, quantity: 1)
+    create(:transaction, invoice: invoice_m1_1, result: "success")
+    
+    merchant_2 = create(:merchant)
+    item_m2_1 = create(:item, merchant: merchant_2)
+    item_m2_2 = create(:item, merchant: merchant_2)
+    item_m2_3 = create(:item, merchant: merchant_2)
+    invoice_m2_1 = create(:invoice, merchant: merchant_2)
+    invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_1, unit_price: 15, quantity: 2)
+    invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_2, unit_price: 1, quantity: 1)
+    invoice_item = create(:invoice_item, invoice: invoice_m2_1, item: item_m2_3, unit_price: 1, quantity: 10)
+    create(:transaction, invoice: invoice_m2_1, result: "success")
+    
+    merchant_3 = create(:merchant)
+    item_m3_1 = create(:item, merchant: merchant_3)
+    item_m3_2 = create(:item, merchant: merchant_3)
+    item_m3_3 = create(:item, merchant: merchant_3)
+    invoice_m3_1 = create(:invoice, merchant: merchant_3)
+    invoice_item = create(:invoice_item, invoice: invoice_m3_1, item: item_m3_1, unit_price: 15, quantity: 2)
+    invoice_item = create(:invoice_item, invoice: invoice_m3_1, item: item_m3_2, unit_price: 1, quantity: 5)
+    create(:transaction, invoice: invoice_m3_1, result: "success")
+    
+    merchant_4 = create(:merchant)
+    item_m4_1 = create(:item, merchant: merchant_4)
+    item_m4_2 = create(:item, merchant: merchant_4)
+    item_m4_3 = create(:item, merchant: merchant_4)
+    invoice_m4_1 = create(:invoice, merchant: merchant_4)
+    invoice_m4_2 = create(:invoice, merchant: merchant_4)
+    create(:invoice_item, invoice: invoice_m4_1, item: item_m4_1, unit_price: 15, quantity: 2)
+    create(:invoice_item, invoice: invoice_m4_1, item: item_m4_2, unit_price: 1, quantity: 1)
+    create(:invoice_item, invoice: invoice_m4_1, item: item_m4_3, unit_price: 1, quantity: 10)
+    create(:invoice_item, invoice: invoice_m4_2, item: item_m4_1, unit_price: 1, quantity: 100)
+    create(:transaction, invoice: invoice_m4_1, result: "failed")
+    create(:transaction, invoice: invoice_m4_2, result: "failed")
+    
+    get "/api/v1/merchants/most_items?quantity=2"
+    
+    expect(response).to be_successful
+    
+    merchants = Merchant.merchants_by_items(2)
+    returned_merchants = JSON.parse(response.body)
+    expect(returned_merchants["data"].count).to eq(2)
+    expect(returned_merchants["data"].first["id"]).to eq(merchants.first.id.to_s)
+    expect(returned_merchants["data"].last["id"]).to eq(merchants.last.id.to_s)
+  end
 end

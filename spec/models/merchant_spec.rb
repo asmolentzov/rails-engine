@@ -73,8 +73,21 @@ RSpec.describe Merchant, type: :model do
         invoice_item = create(:invoice_item, invoice: invoice_m3_1, item: item_m3_2, unit_price: 1, quantity: 5)
         create(:transaction, invoice: invoice_m3_1, result: "success")
         
+        merchant_4 = create(:merchant)
+        item_m4_1 = create(:item, merchant: merchant_4)
+        item_m4_2 = create(:item, merchant: merchant_4)
+        item_m4_3 = create(:item, merchant: merchant_4)
+        invoice_m4_1 = create(:invoice, merchant: merchant_4)
+        invoice_m4_2 = create(:invoice, merchant: merchant_4)
+        create(:invoice_item, invoice: invoice_m4_1, item: item_m4_1, unit_price: 15, quantity: 2)
+        create(:invoice_item, invoice: invoice_m4_1, item: item_m4_2, unit_price: 1, quantity: 1)
+        create(:invoice_item, invoice: invoice_m4_1, item: item_m4_3, unit_price: 1, quantity: 10)
+        create(:invoice_item, invoice: invoice_m4_2, item: item_m4_1, unit_price: 1, quantity: 100)
+        create(:transaction, invoice: invoice_m4_1, result: "failed")
+        create(:transaction, invoice: invoice_m4_2, result: "failed")
+        
         merchants = [merchant_2, merchant_3]
-        expect(Merchant.merchants_by_items).to eq(merchants)
+        expect(Merchant.merchants_by_items(2)).to eq(merchants)
       end
     end
   end
