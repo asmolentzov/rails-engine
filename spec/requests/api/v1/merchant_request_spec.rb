@@ -24,7 +24,7 @@ describe 'Merchants API' do
     
     expect(response).to be_successful
     total = JSON.parse(response.body)
-    require 'pry'; binding.pry
+    # More Testing Here!
     
   end
 end
