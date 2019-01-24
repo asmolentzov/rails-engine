@@ -25,6 +25,9 @@ describe 'Merchants API' do
     it 'can find a single merchant by id' do
       get "/api/v1/merchants/find?id=#{@merchant.id}"
     end
+    it 'can find a single merchant by name' do
+      get "/api/v1/merchants/find?name=#{@merchant.name}"
+    end
     after(:each) do
       returned_merchant = JSON.parse(response.body)
       expect(response).to be_successful
