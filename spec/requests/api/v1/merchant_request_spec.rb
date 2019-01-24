@@ -16,7 +16,7 @@ describe 'Merchants API' do
   
   describe 'for a single merchant' do
     before(:each) do
-      @merchant = create(:merchant, name: "Merchant1")
+      @merchant = create(:merchant, name: "Merchant1", created_at: '2012-03-27 14:53:59 UTC', updated_at: '2012-03-28 14:53:59 UTC')
       create(:merchant)
     end
     it 'can return a single merchant' do
@@ -27,6 +27,12 @@ describe 'Merchants API' do
     end
     it 'can find a single merchant by name' do
       get "/api/v1/merchants/find?name=#{@merchant.name}"
+    end
+    it 'can find a single merchant by created_at' do
+      get "/api/v1/merchants/find?created_at#{merchant.created_at}"
+    end
+    it 'can find a single merchant by updated_at' do
+      get "/api/v1/merchants/find?updated_at#{merchant.updated_at}"
     end
     after(:each) do
       returned_merchant = JSON.parse(response.body)
