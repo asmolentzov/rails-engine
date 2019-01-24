@@ -19,9 +19,13 @@ describe 'Merchants API' do
       @merchant = create(:merchant, name: "Merchant1")
       create(:merchant)
     end
-    it 'can find a single merchant' do
+    it 'can return a single merchant' do
       get "/api/v1/merchants/#{@merchant.id}"
-      
+    end
+    it 'can find a single merchant by id' do
+      get "/api/v1/merchants/find?id=#{@merchant.id}"
+    end
+    after(:each) do
       returned_merchant = JSON.parse(response.body)
       expect(response).to be_successful
       expect(returned_merchant["data"]["id"]).to eq(@merchant.id.to_s)
