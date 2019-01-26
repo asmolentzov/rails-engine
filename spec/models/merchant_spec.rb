@@ -5,6 +5,11 @@ RSpec.describe Merchant, type: :model do
     it { should validate_presence_of(:name) }
   end
   
+  describe 'Relationships' do
+    it { should have_many(:items) }
+    it { should have_many(:invoices) }
+  end
+  
   describe 'Class Methods' do
     describe '.merchants_by_revenue' do
       it 'should return the top x merchants ranked by total revenue' do
@@ -149,9 +154,11 @@ RSpec.describe Merchant, type: :model do
         customer_3 = create(:customer)
         
         invoice_1 = create(:invoice, merchant: merchant, customer: customer_1)
+        
         invoice_2 = create(:invoice, merchant: merchant, customer: customer_2)
         invoice_3 = create(:invoice, merchant: merchant, customer: customer_2)
         invoice_4 = create(:invoice, merchant: merchant, customer: customer_2)
+        
         invoice_5 = create(:invoice, merchant: merchant, customer: customer_3)
         invoice_6 = create(:invoice, merchant: merchant, customer: customer_3)
         
