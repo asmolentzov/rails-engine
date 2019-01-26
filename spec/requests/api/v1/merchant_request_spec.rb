@@ -149,7 +149,7 @@ describe 'Merchants API' do
       get "/api/v1/merchants/#{merchant.id}/revenue?date=#{date}"
       
       expect(response).to be_successful
-      result = response.body
+      result = JSON.parse(response.body)
       expect(result["data"]["attributes"]["revenue"]).to eq(0.0)
       
       # Check successful transactions
@@ -159,8 +159,8 @@ describe 'Merchants API' do
       get "/api/v1/merchants/#{merchant.id}/revenue?date=#{date}"
       
       expect(response).to be_successful
-      result = response.body
-      expect(result["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue_by_date(date))
+      result = JSON.parse(response.body)
+      expect(result["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue_by_date(date) / 100.0)
     end
     
     it 'returns the top x merchants ranked by revenue' do
