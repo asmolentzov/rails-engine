@@ -188,16 +188,16 @@ describe 'Merchants API' do
       get "/api/v1/merchants/#{merchant.id}/favorite_customer"
       
       expect(response).to be_successful
-      returned_customer = response.body["data"]
-      expect(returned_customer["id"]).to eq(customer_3.id)
+      returned_customer = JSON.parse(response.body)["data"]
+      expect(returned_customer["id"]).to eq(customer_3.id.to_s)
       
       create(:transaction, invoice: invoice_3, result: "success")
       create(:transaction, invoice: invoice_4, result: "success")
       get "/api/v1/merchants/#{merchant.id}/favorite_customer"
       
       expect(response).to be_successful
-      returned_customer = response.body["data"]
-      expect(returned_customer["id"]).to eq(customer_2.id)
+      returned_customer = JSON.parse(response.body)["data"]
+      expect(returned_customer["id"]).to eq(customer_2.id.to_s)
     end
     
     it 'returns the top x merchants ranked by revenue' do

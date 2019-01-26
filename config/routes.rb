@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :merchants, only: [:index, :show] do
         scope module: :merchants do
           get 'revenue', to: 'revenue#index'
+          get 'favorite_customer', to: 'favorite_customer#show'
         end
       end
     end
