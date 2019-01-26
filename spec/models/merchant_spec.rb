@@ -131,7 +131,7 @@ RSpec.describe Merchant, type: :model do
         create(:transaction, invoice: invoice, result: "failed")
         expect(merchant.total_revenue_by_date("2012-03-25")).to eq(0)
         
-        # Check successful transaction
+        # Check successful transactions
         create(:transaction, invoice: invoice, result: "success")
         create(:transaction, invoice: invoice_2, result: "success")
         create(:transaction, invoice: invoice_3, result: "success")
