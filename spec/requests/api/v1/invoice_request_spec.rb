@@ -129,4 +129,21 @@ describe 'Invoice API' do
     expect(returned_invoice.count).to eq(1)
     expect(returned_invoice["data"]["type"]).to eq("invoice")
   end
+  
+  describe 'Relationship Endpoints' do
+    it 'returns all the transactions associated with an invoice' do
+      invoice = create(:invoice)
+      transaction = create(:transaction, invoice: invoice)
+      transaction_2 = create(:transaction, invoice: invoice)
+      
+      get "/api/v1/invoices/#{invoice.id}/transactions"
+      
+      expect(response).to be_successful
+      
+      returned_transactions = JSON.parse(response.body)["data"]
+      expect(returned_transactions.count).to eq(2)
+      expect(returned_transactions.first["id"]).to eq(transaction.id)
+      expect(returned_transactions.last["id"]).to eq(transaction_2.id)
+    end
+  end
 end
