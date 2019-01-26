@@ -26,7 +26,7 @@ class Api::V1::Merchants::SearchController < ApplicationController
     if params[:id]
       Merchant.where(id: params[:id])
     elsif params[:name]
-      Merchant.where(name: params[:name])
+      Merchant.where("name ILIKE ?", params[:name])
     elsif params[:created_at]
       Merchant.where(created_at: params[:created_at])
     elsif params [:updated_at]

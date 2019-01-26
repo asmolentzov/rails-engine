@@ -33,6 +33,14 @@ describe 'Merchants API' do
       expect(returned_merchants.count).to eq(2)
       expect(returned_merchants.first["attributes"]["name"]).to eq(merchant.name)
       expect(returned_merchants.last["attributes"]["name"]).to eq(merchant.name)
+      
+      get "/api/v1/merchants/find_all?name=#{merchant.name.upcase}"
+      
+      returned_merchants = JSON.parse(response.body)["data"]
+      expect(response).to be_successful
+      expect(returned_merchants.count).to eq(2)
+      expect(returned_merchants.first["attributes"]["name"]).to eq(merchant.name)
+      expect(returned_merchants.last["attributes"]["name"]).to eq(merchant.name)
     end
     
     it 'can find all merchants by created_at date' do
