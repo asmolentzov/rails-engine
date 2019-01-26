@@ -131,6 +131,10 @@ describe 'Merchants API' do
       expect(total["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue / 100.0)
     end
     
+    it 'returns the total revenue for a specified date for a specified merchant' do
+      merchant 
+    end
+    
     it 'returns the top x merchants ranked by revenue' do
       merchant_1 = create(:merchant)
       item_m1_1 = create(:item, merchant: merchant_1)

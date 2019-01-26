@@ -114,5 +114,30 @@ RSpec.describe Merchant, type: :model do
         expect(merchant.total_revenue).to eq(revenue)
       end
     end
+    
+    describe '#total_revenue_by_date' do
+      it 'should return the total revenue for a merchant on a specified date' do
+        merchant = create(:merchant)
+        item = create(:item, merchant: merchant)
+        invoice = create(:invoice, merchant: merchant, created_at: "2012-03-25 09:54:09 UTC")
+        invoice_2 = create(:invoice, merchant: merchant, created_at: "2012-03-25 10:54:09 UTC")
+        invoice_3 = create(:invoice, merchant: merchant, created_at: "2012-03-30 09:54:09 UTC")
+        
+        invoice_item = create(:invoice_item, item: item, invoice: invoice, unit_price: 10, quantity: 2)
+        invoice_item_2 = create(:invoice_item, item: item, invoice: invoice_2, unit_price: 2, quantity: 5)
+        invoice_item_3 = create(:invoice_item, item: item, invoice: invoice_3)
+        
+        # Check failing transaction
+        create(:transaction, invoice: invoice, result: "failed")
+        expect(merchant.total_revenue_by_date("2012-03-25")).to eq(0)
+        
+        # Check successful transaction
+        create(:transaction, invoice: invoice, result: "success")
+        create(:transaction, invoice: invoice_2, result: "success")
+        create(:transaction, invoice: invoice_3, result: "success")
+        revenue = (invoice_item.unit_price * invoice_item.quantity) + (invoice_item_2.unit_price * invoice_item_2.quantity)
+        expect(merchant.total_revenue_by_date("2012-03-25")).to eq(revenue)
+      end
+    end
   end
 end
