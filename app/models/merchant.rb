@@ -4,21 +4,21 @@ class Merchant < ApplicationRecord
   validates_presence_of :name
   
   def total_revenue
-    # invoices.joins(:invoice_items, :transactions)
-    #         .where(transactions: {result: "success"})
-    #         .sum("invoice_items.quantity * invoice_items.unit_price")
+    invoices.joins(:invoice_items, :transactions)
+            .merge(Transaction.successful)
+            .sum("invoice_items.quantity * invoice_items.unit_price")
             
     # items.joins(invoices: :transactions)
     #      .where(transactions: {result: 'success'})
     #      .sum("invoice_items.quantity * invoice_items.unit_price")
     
-      Invoice.joins(:invoice_items, :transactions)
-           .where(merchant_id: self)
-           .where(transactions: {result: 'success'})
-           .group("invoice_items.id")
-           .select("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
-           .pluck("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
-           .sum 
+      # Invoice.joins(:invoice_items, :transactions)
+      #      .where(merchant_id: self)
+      #      .merge(Transaction.successful)
+      #      .group(:merchant_id)
+      #      .select("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
+      #      .pluck("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
+      #      .sum 
   end
   
   def total_revenue_by_date(date)
