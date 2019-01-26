@@ -145,5 +145,39 @@ describe 'Invoice API' do
       expect(returned_transactions.first["id"]).to eq(transaction.id.to_s)
       expect(returned_transactions.last["id"]).to eq(transaction_2.id.to_s)
     end
+    
+    it 'returns all the invoice items associated with an invoice' do
+      invoice = create(:invoice)
+      
+      ii_1 = create(:invoice_item, invoice: invoice)
+      ii_2 = create(:invoice_item, invoice: invoice)
+      
+      get "/api/v1/invoices/#{invoice.id}/invoice_items"
+      
+      expect(response).to be_successful
+      
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["id"]).to eq(ii_1.id.to_s)
+      expect(returned_invoice_items.last["id"]).to eq(ii_2.id.to_s)
+    end
+    
+    it 'returns all the items associated with an invoice' do
+      invoice = create(:invoice)
+      item_1 = create(:item)
+      item_2 = create(:item)
+      
+      ii_1 = create(:invoice_item, invoice: invoice, item: item_1)
+      ii_2 = create(:invoice_item, invoice: invoice, item: item_2)
+      
+      get "/api/v1/invoices/#{invoice.id}/items"
+      
+      expect(response).to be_successful
+      
+      returned_items = JSON.parse(response.body)["data"]
+      expect(returned_items.count).to eq(2)
+      expect(returned_items.first["id"]).to eq(item_1.id.to_s)
+      expect(returned_items.last["id"]).to eq(item_2.id.to_s)
+    end
   end
 end
