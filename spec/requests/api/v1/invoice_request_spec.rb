@@ -142,8 +142,8 @@ describe 'Invoice API' do
       
       returned_transactions = JSON.parse(response.body)["data"]
       expect(returned_transactions.count).to eq(2)
-      expect(returned_transactions.first["id"]).to eq(transaction.id)
-      expect(returned_transactions.last["id"]).to eq(transaction_2.id)
+      expect(returned_transactions.first["id"]).to eq(transaction.id.to_s)
+      expect(returned_transactions.last["id"]).to eq(transaction_2.id.to_s)
     end
   end
 end
