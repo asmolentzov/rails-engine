@@ -99,20 +99,31 @@ RSpec.describe Merchant, type: :model do
     describe '.all_total_revenue_by_date' do
       it 'returns the total revenue for all merchants for a particular date' do
         invoice_1 = create(:invoice, created_at: "2012-03-24 15:54:10 UTC")
+        create(:transaction, invoice: invoice_1, result: "success")
         
-        invoice_2 = create(:invoice, created_at: "2012-04-24 15:30:10 UTC")
+        invoice_2 = create(:invoice, created_at: "2012-04-24 12:30:10 UTC")
+        create(:transaction, invoice: invoice_2, result: "success")
+        
         invoice_3 = create(:invoice, created_at: "2012-04-24 15:30:10 UTC")
-        invoice_4 = create(:invoice, created_at: "2012-04-24 15:30:10 UTC")
+        create(:transaction, invoice: invoice_3, result: "success")
+        
+        invoice_4 = create(:invoice, created_at: "2012-04-24 15:20:10 UTC")
+        create(:transaction, invoice: invoice_4, result: "success")
+        
+        invoice_5 = create(:invoice, created_at: "2012-04-24 15:10:00 UTC")
+        create(:transaction, invoice: invoice_5, result: "failed")
         
         create(:invoice_item, invoice: invoice_1)
         
         ii_1 = create(:invoice_item, invoice: invoice_2)
-        ii_2 = create(:invoice_item, invoice: invoice_3)
+        ii_2 = create(:invoice_item, invoice: invoice_3, quantity: 5)
         ii_3 = create(:invoice_item, invoice: invoice_4)
+        create(:invoice_item, invoice: invoice_5)
         
+        date = "2012-04-24"
         revenue = (ii_1.quantity * ii_1.unit_price) + (ii_2.quantity * ii_2.unit_price) + (ii_3.quantity * ii_3.unit_price)
         
-        expect(Merchant.all_total_revenue_by_date).to eq(revenue)
+        expect(Merchant.all_total_revenue_by_date(date)).to eq(revenue)
       end
     end
   end
