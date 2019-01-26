@@ -73,6 +73,5 @@ class Merchant < ApplicationRecord
            .merge(Transaction.successful)
            .where(created_at: begin_date..end_date)
            .sum("invoice_items.unit_price * invoice_items.quantity")
-           
   end
 end

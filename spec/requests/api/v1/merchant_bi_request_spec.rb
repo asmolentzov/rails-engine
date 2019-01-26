@@ -208,9 +208,9 @@ describe 'Merchant API: Business Intelligence' do
     
     create(:invoice_item, invoice: invoice_1)
     
-    ii_1 = create(:invoice_item, invoice: invoice_2)
-    ii_2 = create(:invoice_item, invoice: invoice_3, quantity: 5)
-    ii_3 = create(:invoice_item, invoice: invoice_4)
+    create(:invoice_item, invoice: invoice_2)
+    create(:invoice_item, invoice: invoice_3, quantity: 5)
+    create(:invoice_item, invoice: invoice_4)
     create(:invoice_item, invoice: invoice_5)
     
     date = "2012-04-24"
@@ -220,6 +220,6 @@ describe 'Merchant API: Business Intelligence' do
     expect(response).to be_successful
     
     revenue = JSON.parse(response.body)["data"]
-    expect(revenue["revenue"]).to eq((revenue / 100.0).to_s)
+    expect(revenue["attributes"]["total_revenue"]).to eq((Merchant.all_total_revenue_by_date(date) / 100.0).to_s)
   end
 end
