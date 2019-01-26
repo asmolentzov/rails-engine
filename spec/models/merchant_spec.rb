@@ -139,5 +139,36 @@ RSpec.describe Merchant, type: :model do
         expect(merchant.total_revenue_by_date("2012-03-25")).to eq(revenue)
       end
     end
+    
+    describe '#favorite_customer' do
+      it 'returns the customer who has conducted the most total number of successful transactions with a merchant' do
+        merchant = create(:merchant)
+        
+        customer_1 = create(:customer)
+        customer_2 = create(:customer)
+        customer_3 = create(:customer)
+        
+        invoice_1 = create(:invoice, merchant: merchant, customer: customer_1)
+        invoice_2 = create(:invoice, merchant: merchant, customer: customer_2)
+        invoice_3 = create(:invoice, merchant: merchant, customer: customer_2)
+        invoice_4 = create(:invoice, merchant: merchant, customer: customer_2)
+        invoice_5 = create(:invoice, merchant: merchant, customer: customer_3)
+        invoice_6 = create(:invoice, merchant: merchant, customer: customer_3)
+        
+        create(:transaction, invoice: invoice_1, result: "success")
+        expect(merchant.favorite_customer).to eq(customer_1)
+        
+        create(:transaction, invoice: invoice_2, result: "success")
+        create(:transaction, invoice: invoice_3, result: "failed")
+        create(:transaction, invoice: invoice_4, result: "failed")
+        create(:transaction, invoice: invoice_5, result: "success")
+        create(:transaction, invoice: invoice_6, result: "success")
+        expect(merchant.favorite_customer).to eq(customer_3)
+        
+        create(:transaction, invoice: invoice_3, result: "success")
+        create(:transaction, invoice: invoice_4, result: "success")
+        expect(merchant.favorite_customer).to eq(customer_2)
+      end
+    end
   end
 end
