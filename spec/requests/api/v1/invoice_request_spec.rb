@@ -24,7 +24,7 @@ describe 'Invoice API' do
       
       returned_invoices = JSON.parse(response.body)["data"]
       expect(returned_invoices.count).to eq(1)
-      expect(returned_invoices["attributes"]["id"]).to eq(invoice.id)
+      expect(returned_invoices.first["attributes"]["id"]).to eq(invoice.id)
     end
     
     it 'can find all invoices by customer_id' do
