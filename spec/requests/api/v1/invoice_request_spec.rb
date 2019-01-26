@@ -16,15 +16,34 @@ describe 'Invoice API' do
   end
   
   describe 'for a single invoice' do
+    before(:each) do
+      @invoice = create(:invoice)
+    end
+    
     it 'can return a specific invoice' do
-      invoice = create(:invoice)
-      
-      get "/api/v1/invoices/#{invoice.id}"
-      
+      get "/api/v1/invoices/#{@invoice.id}"
+    end
+    it 'can find an invoice by id' do
+      get "/api/v1/invoices/find?id=#{@invoice.id}"
+    end
+    it 'can find an invoice by customer id' do
+      get "/api/v1/invoices/find?customer_id=#{@invoice.customer_id}"
+    end
+    it 'can find an invoice by merchant id' do
+      get "/api/v1/invoices/find?merchant_id=#{@invoice.merchant_id}"
+    end
+    it 'can find an invoice by status' do
+      get "/api/v1/invoices/find?status=#{@invoice.status}"
+    end
+    it 'can find an invoice by status case insensitive' do
+      get "/api/v1/invoices/find?status=#{@invoice.status.upcase}"
+    end
+    
+    after(:each) do
       expect(response).to be_successful
       
       returned_invoice = JSON.parse(response.body)["data"]
-      expect(returned_invoice["attributes"]["id"]).to eq(invoice.id)
+      expect(returned_invoice["attributes"]["id"]).to eq(@invoice.id)
     end
   end
 end
