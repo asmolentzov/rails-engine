@@ -16,10 +16,11 @@ Rails.application.routes.draw do
         get 'random', to: 'random#show'
         get 'most_revenue', to: 'most_revenue#index'
         get 'most_items', to: 'most_items#index'
+        get 'revenue', to: 'revenue#index'
       end
       resources :merchants, only: [:index, :show] do
         scope module: :merchants do
-          get 'revenue', to: 'revenue#index'
+          get 'revenue', to: 'revenue#show'
           get 'favorite_customer', to: 'favorite_customer#show'
           resources :items, only: [:index]
           resources :invoices, only: [:index]
