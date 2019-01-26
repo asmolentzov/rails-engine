@@ -1,37 +1,27 @@
 class Api::V1::Customers::SearchController < ApplicationController
   
   def index
-    if params[:id]
-      customer = Customer.where(id: params[:id])
-    elsif params[:first_name]
-      customer = Customer.where("first_name ILIKE ?", params[:first_name])
-    elsif params[:last_name]
-      customer = Customer.where("last_name ILIKE ?", params[:last_name])
-    elsif params[:created_at]
-      created_at = Time.parse(params[:created_at])
-      customer = Customer.where("created_at BETWEEN ? AND ?", created_at.beginning_of_minute, created_at.end_of_minute)
-    elsif params[:updated_at]
-      updated_at = Time.parse(params[:updated_at])
-      customer = Customer.where("updated_at BETWEEN ? AND ?", updated_at.beginning_of_minute, updated_at.end_of_minute)
-    end
-    render json: CustomerSerializer.new(customer)
+    render json: CustomerSerializer.new(find_customers(params))
   end
   
   def show
+    render json: CustomerSerializer.new(find_customers(params).first)
+  end
+  
+  private
+  
+  def find_customers(params)
     if params[:id]
-      customer = Customer.find(params[:id])
+      Customer.where(id: params[:id])
     elsif params[:first_name]
-      customer = Customer.find_by("first_name ILIKE ?", params[:first_name])
+      Customer.where("first_name ILIKE ?", params[:first_name])
     elsif params[:last_name]
-      customer = Customer.find_by("last_name ILIKE ?", params[:last_name])
+      Customer.where("last_name ILIKE ?", params[:last_name])
     elsif params[:created_at]
-      created_at = Time.parse(params[:created_at])
-      customer = Customer.find_by("created_at BETWEEN ? AND ?", created_at.beginning_of_minute, created_at.end_of_minute)
+      Customer.where(created_at: params[:created_at])
     elsif params[:updated_at]
-      updated_at = Time.parse(params[:updated_at])
-      customer = Customer.find_by("updated_at BETWEEN ? AND ?", updated_at.beginning_of_minute, updated_at.end_of_minute)
+      Customer.where(updated_at: params[:updated_at])
     end
-    render json: CustomerSerializer.new(customer)
   end
   
 end
