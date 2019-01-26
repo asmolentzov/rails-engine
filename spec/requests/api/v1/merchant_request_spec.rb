@@ -128,6 +128,23 @@ describe 'Merchants API' do
       expect(returned_items.second["attributes"]["id"]).to eq(item_2.id)
       expect(returned_items.last["attributes"]["id"]).to eq(item_3.id)
     end
+    
+    it 'returns a collection of invoices associated with a merchant' do
+      merchant = create(:merchant)
+      invoice_1 = create(:invoice, merchant: merchant)
+      invoice_2 = create(:invoice, merchant: merchant)
+      invoice_3 = create(:invoice, merchant: merchant)
+      invoice_4 = create(:invoice)
+      
+      get "/api/v1/merchants/#{merchant.id}/invoices"
+      
+      expect(response).to be_successful
+      returned_invoices = JSON.parse(response.body)["data"]
+      expect(returned_invoices.count).to eq(3)
+      expect(returned_invoices.first["attributes"]["id"]).to eq(invoice_1.id)
+      expect(returned_invoices.second["attributes"]["id"]).to eq(invoice_2.id)
+      expect(returned_invoices.last["attributes"]["id"]).to eq(invoice_3.id)
+    end
   end
   
   describe 'Business Intelligence' do
