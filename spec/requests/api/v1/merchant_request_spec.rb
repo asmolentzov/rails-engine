@@ -128,7 +128,7 @@ describe 'Merchants API' do
       
       expect(response).to be_successful
       total = JSON.parse(response.body)
-      expect(total["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue / 100.0)
+      expect(total["data"]["attributes"]["revenue"]).to eq((merchant.total_revenue / 100.0).to_s)
     end
     
     it 'returns the total revenue for a specified date for a specified merchant' do
@@ -150,7 +150,7 @@ describe 'Merchants API' do
       
       expect(response).to be_successful
       result = JSON.parse(response.body)
-      expect(result["data"]["attributes"]["revenue"]).to eq(0.0)
+        expect(result["data"]["attributes"]["revenue"]).to eq("0.0")
       
       # Check successful transactions
       create(:transaction, invoice: invoice, result: "success")
@@ -160,7 +160,44 @@ describe 'Merchants API' do
       
       expect(response).to be_successful
       result = JSON.parse(response.body)
-      expect(result["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue_by_date(date) / 100.0)
+      expect(result["data"]["attributes"]["revenue"]).to eq((merchant.total_revenue_by_date(date) / 100.0).to_s)
+    end
+    
+    it 'returns the customer who has conducted the most successful transactions with a merchant' do
+      merchant = create(:merchant)
+      
+      customer_1 = create(:customer)
+      customer_2 = create(:customer)
+      customer_3 = create(:customer)
+      
+      invoice_1 = create(:invoice, merchant: merchant, customer: customer_1)
+      
+      invoice_2 = create(:invoice, merchant: merchant, customer: customer_2)
+      invoice_3 = create(:invoice, merchant: merchant, customer: customer_2)
+      invoice_4 = create(:invoice, merchant: merchant, customer: customer_2)
+      
+      invoice_5 = create(:invoice, merchant: merchant, customer: customer_3)
+      invoice_6 = create(:invoice, merchant: merchant, customer: customer_3)
+      
+      create(:transaction, invoice: invoice_1, result: "success")
+      create(:transaction, invoice: invoice_2, result: "success")
+      create(:transaction, invoice: invoice_3, result: "failed")
+      create(:transaction, invoice: invoice_4, result: "failed")
+      create(:transaction, invoice: invoice_5, result: "success")
+      create(:transaction, invoice: invoice_6, result: "success")
+      get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+      
+      expect(response).to be_successful
+      returned_customer = response.body["data"]
+      expect(returned_customer["id"]).to eq(customer_3.id)
+      
+      create(:transaction, invoice: invoice_3, result: "success")
+      create(:transaction, invoice: invoice_4, result: "success")
+      get "/api/v1/merchants/#{merchant.id}/favorite_customer"
+      
+      expect(response).to be_successful
+      returned_customer = response.body["data"]
+      expect(returned_customer["id"]).to eq(customer_2.id)
     end
     
     it 'returns the top x merchants ranked by revenue' do
