@@ -132,7 +132,35 @@ describe 'Merchants API' do
     end
     
     it 'returns the total revenue for a specified date for a specified merchant' do
-      merchant 
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+      invoice = create(:invoice, merchant: merchant, created_at: "2012-03-25 09:54:09 UTC")
+      invoice_2 = create(:invoice, merchant: merchant, created_at: "2012-03-25 10:54:09 UTC")
+      invoice_3 = create(:invoice, merchant: merchant, created_at: "2012-03-30 09:54:09 UTC")
+      
+      create(:invoice_item, item: item, invoice: invoice, unit_price: 10, quantity: 2)
+      create(:invoice_item, item: item, invoice: invoice_2, unit_price: 2, quantity: 5)
+      create(:invoice_item, item: item, invoice: invoice_3)
+      
+      date = "2012-03-25"
+      
+      # Check failing transaction
+      create(:transaction, invoice: invoice, result: "failed")
+      get "/api/v1/merchants/#{merchant.id}/revenue?date=#{date}"
+      
+      expect(response).to be_successful
+      result = response.body
+      expect(result["data"]["attributes"]["revenue"]).to eq(0.0)
+      
+      # Check successful transactions
+      create(:transaction, invoice: invoice, result: "success")
+      create(:transaction, invoice: invoice_2, result: "success")
+      create(:transaction, invoice: invoice_3, result: "success") 
+      get "/api/v1/merchants/#{merchant.id}/revenue?date=#{date}"
+      
+      expect(response).to be_successful
+      result = response.body
+      expect(result["data"]["attributes"]["revenue"]).to eq(merchant.total_revenue_by_date(date))
     end
     
     it 'returns the top x merchants ranked by revenue' do
