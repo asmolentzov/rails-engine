@@ -8,10 +8,17 @@ class Merchant < ApplicationRecord
     #         .where(transactions: {result: "success"})
     #         .sum("invoice_items.quantity * invoice_items.unit_price")
             
-    items.joins(invoices: :transactions)
-         .where(transactions: {result: 'success'})
-         .sum("invoice_items.quantity * invoice_items.unit_price")
-
+    # items.joins(invoices: :transactions)
+    #      .where(transactions: {result: 'success'})
+    #      .sum("invoice_items.quantity * invoice_items.unit_price")
+    
+      Invoice.joins(:invoice_items, :transactions)
+           .where(merchant_id: self)
+           .where(transactions: {result: 'success'})
+           .group("invoice_items.id")
+           .select("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
+           .pluck("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
+           .sum 
   end
   
   def self.merchants_by_revenue(quantity)
@@ -26,7 +33,7 @@ class Merchant < ApplicationRecord
   def self.merchants_by_items(quantity)
     Merchant.joins(invoices: [:invoice_items, :transactions])
             .where("transactions.result = 'success'")
-            .select("merchants.*, COUNT(invoice_items.id) AS item_count")
+            .select("merchants.*, SUM(invoice_items.quantity) AS item_count")
             .group(:id)
             .order("item_count DESC")
             .limit(quantity)
