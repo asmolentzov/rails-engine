@@ -34,6 +34,32 @@ describe 'Merchants API' do
       expect(returned_merchants.first["attributes"]["name"]).to eq(merchant.name)
       expect(returned_merchants.last["attributes"]["name"]).to eq(merchant.name)
     end
+    
+    it 'can find all merchants by created_at date' do
+      merchant = create(:merchant, created_at: '2012-03-28 14:53:59 UTC')
+      create(:merchant, created_at: '2012-03-28 14:53:59 UTC')
+      create(:merchant, created_at: '2012-03-28 14:53:59 UTC')
+      
+      get "/api/v1/merchants/find_all?created_at=#{merchant.created_at}"
+      
+      returned_merchants = JSON.parse(response.body)["data"]
+      expect(response).to be_successful
+      expect(returned_merchants.count).to eq(3)
+      expect(returned_merchants.first["attributes"]["id"]).to eq(merchant.id)
+    end
+    
+    it 'can find all merchants by updated_at date' do
+      merchant = create(:merchant, updated_at: '2012-03-28 14:53:59 UTC')
+      create(:merchant, updated_at: '2012-03-28 14:53:59 UTC')
+      create(:merchant, updated_at: '2012-03-28 14:53:59 UTC')
+      
+      get "/api/v1/merchants/find_all?updated_at=#{merchant.updated_at}"
+      
+      returned_merchants = JSON.parse(response.body)["data"]
+      expect(response).to be_successful
+      expect(returned_merchants.count).to eq(3)
+      expect(returned_merchants.first["attributes"]["id"]).to eq(merchant.id)
+    end
   end
   
   describe 'for a single merchant' do
