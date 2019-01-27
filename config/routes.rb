@@ -69,6 +69,9 @@ Rails.application.routes.draw do
         end
       end
       
+      namespace :transactions do
+        get 'find', to: 'search#show'
+      end
       resources :transactions, only: [:index, :show]
     end
   end
