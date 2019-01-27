@@ -96,11 +96,11 @@ describe 'Item Business Intelligence API' do
     create(:invoice_item, item: item, invoice: invoice_1, unit_price: 5, quantity: 1)
     create(:transaction, invoice: invoice_1, result: 'success')
     
-    invoice_2 = create(:invoice, created_at: "2012-03-13 03:54:10 UTC")
+    invoice_2 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
     create(:invoice_item, item: item, invoice: invoice_2, unit_price: 5, quantity: 10)
     create(:transaction, invoice: invoice_2, result: 'success')
     
-    invoice_3 = create(:invoice, created_at: "2012-03-13 03:44:10 UTC")
+    invoice_3 = create(:invoice, created_at: "2012-03-17 03:44:10 UTC")
     create(:invoice_item, item: item, invoice: invoice_3, unit_price: 5, quantity: 100)
     create(:transaction, invoice: invoice_3, result: 'success')
     
@@ -116,9 +116,9 @@ describe 'Item Business Intelligence API' do
     
     expect(response).to be_successful
     date = JSON.parse(response.body)["data"]
-    expect(date["attributes"]["best_day"]).to eq("2012-03-13T03:44:10.000Z")
+    expect(date["attributes"]["best_day"]).to eq("2012-03-17T03:54:10.000Z")
     
-    invoice_6 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
+    invoice_6 = create(:invoice, created_at: "2012-03-13 03:54:10 UTC")
     create(:invoice_item, item: item, invoice: invoice_6, unit_price: 1, quantity: 550)
     create(:transaction, invoice: invoice_6, result: 'success')
     
