@@ -13,7 +13,7 @@ describe 'Invoice Items API' do
       
       returned_invoice_items = JSON.parse(response.body)["data"]
       expect(returned_invoice_items.count).to eq(3)
-      expect(returned_invoice_items.first["attributes"]["type"]).to eq("invoice_item")
+      expect(returned_invoice_items.first["type"]).to eq("invoice_item")
     end
   end
   
@@ -29,7 +29,7 @@ describe 'Invoice Items API' do
     after(:each) do
       expect(response).to be_successful
       returned_invoice_item = JSON.parse(response.body)
-      expect(returned_invoice_item["attributes"]["id"]).to eq(@invoice_item.id)
+      expect(returned_invoice_item["data"]["id"]).to eq(@invoice_item.id.to_s)
     end
   end
 end
