@@ -156,4 +156,34 @@ describe 'Invoice Items API' do
     expect(returned_invoice_item.count).to eq(1)
     expect(returned_invoice_item["data"]["type"]).to eq("invoice_item")
   end
+  
+  describe 'Relationship Endpoints' do
+    it 'returns the invoice associated with an invoice item' do
+      invoice = create(:invoice)
+      ii = create(:invoice_item, invoice: invoice)
+      
+      get "/api/v1/invoice_items/#{ii.id}/invoice"
+      
+      expect(response).to be_successful
+      
+      returned_invoice = JSON.parse(response.body)
+      expect(returned_invoice.count).to eq(1)
+      expect(returned_invoice["data"]["id"]).to eq(invoice.id.to_s)
+      expect(returned_invoice["data"]["type"]).to eq("invoice")
+    end
+    
+    it 'returns the item associated with an invoice item' do
+      item = create(:item)
+      ii = create(:invoice_item, item: item)
+      
+      get "/api/v1/invoice_items/#{ii.id}/item"
+      
+      expect(response).to be_successful
+      
+      returned_invoice = JSON.parse(response.body)
+      expect(returned_invoice.count).to eq(1)
+      expect(returned_invoice["data"]["id"]).to eq(item.id.to_s)
+      expect(returned_invoice["data"]["type"]).to eq("item")
+    end
+  end
 end
