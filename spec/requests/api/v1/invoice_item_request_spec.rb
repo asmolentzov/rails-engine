@@ -19,7 +19,7 @@ describe 'Invoice Items API' do
   
   describe 'for a single invoice item' do
     before(:each) do
-      @invoice_item = create(:invoice_item)
+      @invoice_item = create(:invoice_item, created_at: "2012-03-27 14:54:09 UTC", updated_at: "2012-03-27 14:54:09 UTC")
     end
     
     it 'can return a single invoice item' do
@@ -49,8 +49,8 @@ describe 'Invoice Items API' do
     
     after(:each) do
       expect(response).to be_successful
-      returned_invoice_item = JSON.parse(response.body)
-      expect(returned_invoice_item["data"]["id"]).to eq(@invoice_item.id.to_s)
+      returned_invoice_item = JSON.parse(response.body)["data"]
+      expect(returned_invoice_item["attributes"]["id"]).to eq(@invoice_item.id)
     end
   end
 end
