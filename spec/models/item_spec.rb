@@ -118,13 +118,15 @@ RSpec.describe Item, type: :model do
         create(:invoice_item, item: item, invoice: invoice_5, unit_price: 5, quantity: 100)
         create(:transaction, invoice: invoice_5, result: 'success')
         
-        expect(item.best_date).to eq("2012-03-13")
+        date = Time.parse("2012-03-13 03:44:10 UTC")
+        expect(item.best_date).to eq(date.iso8601)
         
         invoice_6 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
         create(:invoice_item, item: item, invoice: invoice_6, unit_price: 1, quantity: 550)
         create(:transaction, invoice: invoice_6, result: 'success')
         
-        expect(item.best_date).to eq("2012-03-17")
+        date = Time.parse("2012-03-17 03:54:10 UTC")
+        expect(item.best_date).to eq(date.iso8601)
       end
     end
   end
