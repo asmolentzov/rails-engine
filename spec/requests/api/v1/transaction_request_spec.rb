@@ -127,4 +127,16 @@ describe 'Transaction API' do
       expect(returned_transaction["data"]["attributes"]["id"]).to eq(@transaction.id)
     end
   end
+  
+  it 'can find a random transaction' do
+    create_list(:transaction, 3)
+    
+    get '/api/v1/transactions/random' 
+    
+    expect(response).to be_successful
+    
+    returned_transaction = JSON.parse(response.body)
+    expect(returned_transaction.count).to eq(1)
+    expect(returned_transaction["data"]["type"]).to eq("transaction")
+  end
 end
