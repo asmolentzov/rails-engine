@@ -142,4 +142,16 @@ describe 'Item API' do
       expect(returned_item["data"]["attributes"]["id"]).to eq(@item.id)
     end
   end
+  
+  it 'can find a random item' do
+    create_list(:item, 3)
+    
+    get '/api/v1/items/random' 
+    
+    expect(response).to be_successful
+    
+    returned_item = JSON.parse(response.body)
+    expect(returned_item.count).to eq(1)
+    expect(returned_item["data"]["type"]).to eq("item")
+  end
 end
