@@ -19,7 +19,7 @@ describe 'Item API' do
   
   describe 'For a single item' do
     before(:each) do
-      @item = create(:item)
+      @item = create(:item, created_at: "2012-03-27 14:53:59 UTC", updated_at: "2012-03-27 14:53:59 UTC")
     end
     it 'can return a single item' do
       get "/api/v1/items/#{@item.id}"
@@ -48,7 +48,6 @@ describe 'Item API' do
     after(:each) do
       expect(response).to be_successful
       returned_item = JSON.parse(response.body)
-      
       expect(returned_item.count).to eq(1)
       expect(returned_item["data"]["attributes"]["id"]).to eq(@item.id)
     end
