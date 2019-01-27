@@ -154,6 +154,6 @@ describe 'Invoice Items API' do
     expect(response).to be_successful
     returned_invoice_item = JSON.parse(response.body)
     expect(returned_invoice_item.count).to eq(1)
-    expect(returned_invoice_item["type"]).to eq("invoice_item")
+    expect(returned_invoice_item["data"]["type"]).to eq("invoice_item")
   end
 end
