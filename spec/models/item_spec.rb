@@ -92,4 +92,40 @@ RSpec.describe Item, type: :model do
       end
     end
   end
+  
+  describe 'Instance Methods' do
+    describe '#best_date' do
+      it 'returns the date with the most sales for the given item using the invoice date' do
+        item = create(:item)
+        
+        invoice_1 = create(:invoice, created_at: "2012-03-12 03:54:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_1, unit_price: 5, quantity: 1)
+        create(:transaction, invoice: invoice_1, result: 'success')
+        
+        invoice_2 = create(:invoice, created_at: "2012-03-13 03:54:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_2, unit_price: 5, quantity: 10)
+        create(:transaction, invoice: invoice_2, result: 'success')
+        
+        invoice_3 = create(:invoice, created_at: "2012-03-13 03:44:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_3, unit_price: 5, quantity: 100)
+        create(:transaction, invoice: invoice_3, result: 'success')
+        
+        invoice_4 = create(:invoice, created_at: "2012-03-15 03:54:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_4, unit_price: 50, quantity: 100)
+        create(:transaction, invoice: invoice_4, result: "failed")
+        
+        invoice_5 = create(:invoice, created_at: "2012-03-14 03:54:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_5, unit_price: 5, quantity: 100)
+        create(:transaction, invoice: invoice_5, result: 'success')
+        
+        expect(item.best_date).to eq("2012-03-13")
+        
+        invoice_6 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
+        create(:invoice_item, item: item, invoice: invoice_6, unit_price: 1, quantity: 550)
+        create(:transaction, invoice: invoice_6, result: 'success')
+        
+        expect(item.best_date).to eq("2012-03-17")
+      end
+    end
+  end
 end
