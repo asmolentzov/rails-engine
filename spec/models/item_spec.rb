@@ -12,7 +12,7 @@ RSpec.describe Item, type: :model do
   end
   
   describe 'Class Methods' do
-    describe '.items_by_revenue' do
+    describe '.top_items_by_revenue' do
       it 'returns the top x items ranked by total revenue generated' do
         item_1 = create(:item)
         item_2 = create(:item)
@@ -47,8 +47,8 @@ RSpec.describe Item, type: :model do
         create(:transaction, invoice: invoice_6, result: 'failed')
         create(:transaction, invoice: invoice_7, result: 'success')
         
-        expect(Item.top_items_by_revenue(2)).to eq([item_4, item_3])
-        expect(Item.top_items_by_revenue(3)).to eq([item_4, item_3, item_2])
+        expect(Item.top_items_by_revenue(2)).to eq([item_5, item_3])
+        expect(Item.top_items_by_revenue(3)).to eq([item_5, item_3, item_2])
       end
     end
   end
