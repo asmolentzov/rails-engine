@@ -51,6 +51,8 @@ Rails.application.routes.draw do
       end
       resources :items, only: [:index, :show] do
         scope module: :items do
+          get '/invoice_items', to: 'invoice_items#index'
+          get '/merchant', to: 'merchants#show'
           get '/best_day', to: 'best_day#show'
         end
       end
