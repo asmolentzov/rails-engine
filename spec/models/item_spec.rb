@@ -102,11 +102,11 @@ RSpec.describe Item, type: :model do
         create(:invoice_item, item: item, invoice: invoice_1, unit_price: 5, quantity: 1)
         create(:transaction, invoice: invoice_1, result: 'success')
         
-        invoice_2 = create(:invoice, created_at: "2012-03-13 03:54:10 UTC")
+        invoice_2 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
         create(:invoice_item, item: item, invoice: invoice_2, unit_price: 5, quantity: 10)
         create(:transaction, invoice: invoice_2, result: 'success')
         
-        invoice_3 = create(:invoice, created_at: "2012-03-13 03:44:10 UTC")
+        invoice_3 = create(:invoice, created_at: "2012-03-17 03:44:10 UTC")
         create(:invoice_item, item: item, invoice: invoice_3, unit_price: 5, quantity: 100)
         create(:transaction, invoice: invoice_3, result: 'success')
         
@@ -118,7 +118,7 @@ RSpec.describe Item, type: :model do
         create(:invoice_item, item: item, invoice: invoice_5, unit_price: 5, quantity: 100)
         create(:transaction, invoice: invoice_5, result: 'success')
         
-        date = Time.parse("2012-03-13 03:44:10 UTC")
+        date = Time.parse("2012-03-17 03:54:10 UTC")
         expect(item.best_date).to eq(date.iso8601)
         
         invoice_6 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")

@@ -27,13 +27,28 @@ class Item < ApplicationRecord
   end
   
   def best_date
-    invoices.joins(:invoice_items, :transactions)
-    .merge(Transaction.successful)
-    .group("DATE_TRUNC('day', invoices.created_at)")
-    .group(:id)
-    .group("invoice_items.id")
-    .select("invoices.*, invoice_items.quantity * invoice_items.unit_price AS total_sales")
-    .order("total_sales DESC")
-    .first.created_at
+    # ordered_invoices = invoices.joins(:invoice_items, :transactions)
+    # .merge(Transaction.successful)
+    # .group("DATE_TRUNC('day', invoices.created_at)")
+    # .group(:id)
+    # .group("invoice_items.id")
+    # .select("invoices.*, invoice_items.quantity * invoice_items.unit_price AS total_sales")
+    # .order("total_sales DESC")
+    # .order(created_at: :desc)
+    
+    
+    
+    x = invoices.joins(:invoice_items, :transactions)
+            .merge(Transaction.successful)
+            .group(:id)
+            .select("invoices.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS total_sales")
+            
+    y = x.group("DATE_TRUNC('day', invoices.created_at)")
+         .select("SUM(total_sales) AS sales_by_date")
+         .order("sales_by_date DESC")
+         .first
+            
+    require 'pry'; binding.pry
+    # .first.created_at
   end
 end
