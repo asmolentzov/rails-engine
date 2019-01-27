@@ -41,10 +41,8 @@ describe 'Transaction API' do
       expect(returned_transactions.last["attributes"]["id"]).to eq(transaction_2.id)
     end
     it 'can find all transactions by credit_card_number' do
-      transaction = create(:transaction, credit_card_number: "541
-      6515")
-      transaction_2 = create(:transaction, credit_card_number: "541
-      6515")
+      transaction = create(:transaction, credit_card_number: "5416515")
+      transaction_2 = create(:transaction, credit_card_number: "5416515")
       
       get "/api/v1/transactions/find_all?credit_card_number=#{transaction.credit_card_number}"
       
