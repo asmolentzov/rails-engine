@@ -88,4 +88,44 @@ describe 'Item Business Intelligence API' do
     expect(returned_items.count).to eq(2)
     expect(returned_items.first["attributes"]["id"]).to eq(Item.top_items_by_number_sold(2).first.id)
   end
+  
+  it 'returns the date with the mmost sales for a given item' do
+    item = create(:item)
+    
+    invoice_1 = create(:invoice, created_at: "2012-03-12 03:54:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_1, unit_price: 5, quantity: 1)
+    create(:transaction, invoice: invoice_1, result: 'success')
+    
+    invoice_2 = create(:invoice, created_at: "2012-03-13 03:54:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_2, unit_price: 5, quantity: 10)
+    create(:transaction, invoice: invoice_2, result: 'success')
+    
+    invoice_3 = create(:invoice, created_at: "2012-03-13 03:44:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_3, unit_price: 5, quantity: 100)
+    create(:transaction, invoice: invoice_3, result: 'success')
+    
+    invoice_4 = create(:invoice, created_at: "2012-03-15 03:54:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_4, unit_price: 50, quantity: 100)
+    create(:transaction, invoice: invoice_4, result: "failed")
+    
+    invoice_5 = create(:invoice, created_at: "2012-03-14 03:54:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_5, unit_price: 5, quantity: 100)
+    create(:transaction, invoice: invoice_5, result: 'success')
+    
+    get "/api/v1/items/#{item.id}/best_day"
+    
+    expect(response).to be_successful
+    date = JSON.parse(response.body)["data"]
+    expect(date["attributes"]["best_day"]).to eq("2012-03-13T03:44:10.000Z")
+    
+    invoice_6 = create(:invoice, created_at: "2012-03-17 03:54:10 UTC")
+    create(:invoice_item, item: item, invoice: invoice_6, unit_price: 1, quantity: 550)
+    create(:transaction, invoice: invoice_6, result: 'success')
+    
+    get "/api/v1/items/#{item.id}/best_day"
+    
+    expect(response).to be_successful
+    date = JSON.parse(response.body)["data"]
+    expect(date["attributes"]["best_day"]).to eq("2012-03-17T03:54:10.000Z")
+  end
 end

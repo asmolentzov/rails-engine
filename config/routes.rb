@@ -46,6 +46,11 @@ Rails.application.routes.draw do
         get '/most_revenue', to: 'most_revenue#index'
         get '/most_items', to: 'most_items#index'
       end
+      resources :items, only: [] do
+        scope module: :items do
+          get '/best_day', to: 'best_day#show'
+        end
+      end
       
       namespace :invoice_items do
         get 'find', to: 'search#show'
