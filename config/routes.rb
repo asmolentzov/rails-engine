@@ -68,6 +68,8 @@ Rails.application.routes.draw do
           get '/item', to: 'items#show'
         end
       end
+      
+      resources :transactions, only: [:index, :show]
     end
   end
 end

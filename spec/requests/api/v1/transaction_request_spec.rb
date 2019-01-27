@@ -13,7 +13,7 @@ describe 'Transaction API' do
       
       returned_transactions = JSON.parse(response.body)["data"]
       expect(returned_transactions.count).to eq(3)
-      expect(returned_transactions.first["attributes"]["type"]).to eq("transaction")
+      expect(returned_transactions.first["type"]).to eq("transaction")
     end
   end
   
@@ -30,7 +30,7 @@ describe 'Transaction API' do
       
       returned_transaction = JSON.parse(response.body)
       expect(returned_transaction.count).to eq(1)
-      expect(returned_transaction["attributes"]["id"]).to eq(@transaction.id)
+      expect(returned_transaction["data"]["attributes"]["id"]).to eq(@transaction.id)
     end
   end
 end
