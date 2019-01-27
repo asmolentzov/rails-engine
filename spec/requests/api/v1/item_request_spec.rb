@@ -28,7 +28,7 @@ describe 'Item API' do
       returned_item = JSON.parse(response.body)
       
       expect(returned_item.count).to eq(1)
-      expect(returned_item["attributes"]["id"]).to eq(@item.id)
+      expect(returned_item["data"]["attributes"]["id"]).to eq(@item.id)
     end
   end
 end
