@@ -23,7 +23,29 @@ describe 'Item API' do
     end
     it 'can return a single item' do
       get "/api/v1/items/#{@item.id}"
-      
+    end
+    it 'can find a single item by its id' do
+      get "/api/v1/items/find?id=#{@item.id}"
+    end
+    it 'can find a single item by its name' do
+      get "/api/v1/items/find?name=#{@item.name}"
+    end
+    it 'can find a single item by its description' do
+      get "/api/v1/items/find?description=#{@item.description}"
+    end
+    it 'can find a single item by its unit_price' do
+      get "/api/v1/items/find?unit_price=#{@item.unit_price}"
+    end
+    it 'can find a single item by its merchant_id' do
+      get "/api/v1/items/find?merchant_id=#{@item.merchant_id}"
+    end
+    it 'can find a single item by its created_at' do
+      get "/api/v1/items/find?created_at=#{@item.created_at}"
+    end
+    it 'can find a single item by its updated_at' do
+      get "/api/v1/items/find?updated_at=#{@item.updated_at}"
+    end
+    after(:each) do
       expect(response).to be_successful
       returned_item = JSON.parse(response.body)
       
