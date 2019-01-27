@@ -1,4 +1,4 @@
-'rails_helper'
+require 'rails_helper'
 
 describe 'Invoice Items API' do
   describe 'for a collection of invoice items' do
