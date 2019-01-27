@@ -182,7 +182,7 @@ describe 'Invoice API' do
     
     it 'returns the customer associated with an invoice' do
       customer = create(:customer)
-      invoice = create(:invoice)
+      invoice = create(:invoice, customer: customer)
       
       get "/api/v1/invoices/#{invoice.id}/customer"
       
@@ -194,7 +194,7 @@ describe 'Invoice API' do
     
     it 'returns the merchant associated with an invoice' do
       merchant = create(:merchant)
-      invoice = create(:invoice)
+      invoice = create(:invoice, merchant: merchant)
       
       get "/api/v1/invoices/#{invoice.id}/merchant"
       
