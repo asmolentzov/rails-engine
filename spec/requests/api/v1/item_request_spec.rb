@@ -154,4 +154,35 @@ describe 'Item API' do
     expect(returned_item.count).to eq(1)
     expect(returned_item["data"]["type"]).to eq("item")
   end
+  
+  describe 'Relationships' do
+    it 'can return the invoice items associated with an item' do
+      item = create(:item)
+      ii_1 = create(:invoice_item, item: item)
+      ii_2 = create(:invoice_item, item: item)
+      ii_3 = create(:invoice_item, item: item)
+      
+      get "/api/v1/items/#{item.id}/invoice_items"
+      
+      expect(response).to be_successful
+      
+      returned_iis = JSON.parse(response.body)["data"]
+      expect(returned_iis.count).to eq(3)
+      expect(returned_iis.first["attributes"]["id"]).to eq(ii_1.id)
+      expect(returned_iis.second["attributes"]["id"]).to eq(ii_2.id)
+      expect(returned_iis.last["attributes"]["id"]).to eq(ii_3.id)
+    end
+    
+    it 'can return the merchant associated with an item' do
+      merchant = create(:merchant)
+      item = create(:item, merchant: merchant)
+      
+      get "/api/v1/items/#{item.id}/merchant"
+      
+      expect(response).to be_successful
+      returned_merchant = JSON.parse(response.body)
+      expect(returned_merchant.count).to eq(1)
+      expect(returned_merchant["data"]["attributes"]["id"]).to eq(merchant.id)
+    end
+  end
 end
