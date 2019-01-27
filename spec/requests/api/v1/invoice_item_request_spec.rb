@@ -15,6 +15,98 @@ describe 'Invoice Items API' do
       expect(returned_invoice_items.count).to eq(3)
       expect(returned_invoice_items.first["type"]).to eq("invoice_item")
     end
+    
+    it 'can find all invoice items by id' do
+      ii = create(:invoice_item)
+      
+      get "/api/v1/invoice_items/find_all?id=#{ii.id}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(1)
+      expect(returned_invoice_items.first["type"]).to eq("invoice_item")
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+    end
+    
+    it 'can find all invoice items by item_id' do
+      item = create(:item)
+      ii = create(:invoice_item, item: item)
+      ii_2 = create(:invoice_item, item: item)
+      
+      get "/api/v1/invoice_items/find_all?item_id=#{ii.item_id}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
+    
+    it 'can find all invoice items by invoice_id' do
+      invoice = create(:invoice)
+      ii = create(:invoice_item, invoice: invoice)
+      ii_2 = create(:invoice_item, invoice: invoice)
+      
+      get "/api/v1/invoice_items/find_all?invoice_id=#{ii.invoice_id}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
+    
+    it 'can find all invoice items by quantity' do
+      ii = create(:invoice_item, quantity: 100)
+      ii_2 = create(:invoice_item, quantity: 100)
+      
+      get "/api/v1/invoice_items/find_all?quantity=#{ii.quantity}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
+    
+    it 'can find all invoice items by unit_price' do
+      ii = create(:invoice_item, unit_price: 1000)
+      ii_2 = create(:invoice_item, unit_price: 1000)
+      
+      get "/api/v1/invoice_items/find_all?unit_price=#{ii.unit_price}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
+    
+    it 'can find all invoice items by created_at' do
+      ii = create(:invoice_item, created_at: "2012-03-27 14:54:09 UTC")
+      ii_2 = create(:invoice_item, created_at: "2012-03-27 14:54:09 UTC")
+      
+      get "/api/v1/invoice_items/find_all?created_at=#{ii.created_at}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
+    
+    it 'can find all invoice items by updated_at' do
+      ii = create(:invoice_item, updated_at: "2012-03-27 14:54:09 UTC")
+      ii_2 = create(:invoice_item, updated_at: "2012-03-27 14:54:09 UTC")
+      
+      get "/api/v1/invoice_items/find_all?updated_at=#{ii.updated_at}"
+      
+      expect(response).to be_successful
+      returned_invoice_items = JSON.parse(response.body)["data"]
+      expect(returned_invoice_items.count).to eq(2)
+      expect(returned_invoice_items.first["attributes"]["id"]).to eq(ii.id)
+      expect(returned_invoice_items.last["attributes"]["id"]).to eq(ii_2.id)
+    end
   end
   
   describe 'for a single invoice item' do
