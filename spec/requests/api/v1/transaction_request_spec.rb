@@ -24,7 +24,24 @@ describe 'Transaction API' do
     it 'can return a single transaction' do
       get "/api/v1/transactions/#{@transaction.id}"
     end
-    
+    it 'can find a transaction by id' do
+      get "/api/v1/transactions/find?id=#{@transaction.id}"
+    end
+    it 'can find a transaction by invoice_id' do
+      get "/api/v1/transactions/find?invoice_id=#{@transaction.invoice_id}"
+    end
+    it 'can find a transaction by credit_card_number' do
+      get "/api/v1/transactions/find?credit_card_number=#{@transaction.credit_card_number}"
+    end
+    it 'can find a transaction by result' do
+      get "/api/v1/transactions/find?result=#{@transaction.result}"
+    end
+    it 'can find a transaction by created_at' do
+      get "/api/v1/transactions/find?created_at=#{@transaction.created_at}"
+    end
+    it 'can find a transaction by updated_at' do
+      get "/api/v1/transactions/find?updated_at=#{@transaction.updated_at}"
+    end
     after(:each) do
       expect(response).to be_successful
       
