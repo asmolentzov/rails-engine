@@ -31,8 +31,8 @@ class Item < ApplicationRecord
     .merge(Transaction.successful)
     .group("DATE_TRUNC('day', invoices.created_at)")
     .select("DATE_TRUNC('day', invoices.created_at) AS created_date, SUM(invoice_items.quantity * invoice_items.unit_price) AS total_sales")
-    .order("total_sales DESC")
     .order("created_date DESC")
+    .order("total_sales DESC")
     .first.created_date
     
     Invoice.where("DATE_TRUNC('day', invoices.created_at) = ?", date)
