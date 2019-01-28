@@ -7,18 +7,6 @@ class Merchant < ApplicationRecord
     invoices.joins(:invoice_items, :transactions)
             .merge(Transaction.successful)
             .sum("invoice_items.quantity * invoice_items.unit_price")
-            
-    # items.joins(invoices: :transactions)
-    #      .where(transactions: {result: 'success'})
-    #      .sum("invoice_items.quantity * invoice_items.unit_price")
-    
-      # Invoice.joins(:invoice_items, :transactions)
-      #      .where(merchant_id: self)
-      #      .merge(Transaction.successful)
-      #      .group(:merchant_id)
-      #      .select("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
-      #      .pluck("SUM(invoice_items.quantity * invoice_items.unit_price) AS invoice_price")
-      #      .sum 
   end
   
   def total_revenue_by_date(date)
@@ -31,12 +19,6 @@ class Merchant < ApplicationRecord
   end
   
   def favorite_customer
-    # invoices.merge(Transaction.successful)
-    #         .group(:customer_id)
-    #         .select("COUNT(transactions.id) AS transactions_count")
-    #         .order("transactions_count DESC")
-    #         .
-    
     Customer.joins(invoices: :transactions)
             .merge(Transaction.successful)
             .where("invoices.merchant_id = ?", self)
@@ -48,7 +30,7 @@ class Merchant < ApplicationRecord
   
   def self.merchants_by_revenue(quantity)
      Merchant.joins(invoices: [:invoice_items, :transactions])
-              .where(transactions: {result: "success"})
+              .merge(Transaction.successful)
               .select("merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) AS revenue")
               .group(:id)
               .order("revenue DESC")
@@ -57,7 +39,7 @@ class Merchant < ApplicationRecord
   
   def self.merchants_by_items(quantity)
     Merchant.joins(invoices: [:invoice_items, :transactions])
-            .where("transactions.result = 'success'")
+            .merge(Transaction.successful)
             .select("merchants.*, SUM(invoice_items.quantity) AS item_count")
             .group(:id)
             .order("item_count DESC")
