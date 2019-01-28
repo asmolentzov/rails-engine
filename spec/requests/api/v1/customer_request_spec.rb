@@ -156,4 +156,39 @@ describe 'Customers API' do
     expect(customer.count).to eq(1)
     expect(customer["data"]["type"]).to eq("customer")
   end
+  
+  describe 'Relationships' do
+    it 'can return associated invoices' do
+      customer = create(:customer)
+      invoice_1 = create(:invoice, customer: customer)
+      invoice_2 = create(:invoice, customer: customer)
+      invoice_3 = create(:invoice, customer: customer)
+      
+      get "/api/v1/customers/#{customer.id}/invoices"
+      
+      expect(response).to be_successful
+      invoices = JSON.parse(response.body)["data"]
+      expect(invoices.count).to eq(3)
+      expect(invoices.first["attributes"]["id"]).to eq(invoice_1.id)
+      expect(invoices.second["attributes"]["id"]).to eq(invoice_2.id)
+      expect(invoices.last["attributes"]["id"]).to eq(invoice_3.id)
+    end
+    
+    it 'can return associated transactions' do
+      customer = create(:customer)
+      invoice = create(:invoice, customer: customer)
+      transaction_1 = create(:transaction, invoice: invoice)
+      transaction_2 = create(:transaction, invoice: invoice)
+      transaction_3 = create(:transaction, invoice: invoice)
+      
+      get "/api/v1/customers/#{customer.id}/transactions"
+      
+      expect(response).to be_successful
+      transactions = JSON.parse(response.body)["data"]
+      expect(transactions.count).to eq(3)
+      expect(transactions.first["attributes"]["id"]).to eq(transaction_1.id)
+      expect(transactions.second["attributes"]["id"]).to eq(transaction_2.id)
+      expect(transactions.last["attributes"]["id"]).to eq(transaction_3.id)
+    end
+  end
 end
