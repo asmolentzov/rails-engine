@@ -73,7 +73,7 @@ describe 'Invoice Items API' do
       ii = create(:invoice_item, unit_price: 1000)
       ii_2 = create(:invoice_item, unit_price: 1000)
       
-      get "/api/v1/invoice_items/find_all?unit_price=#{ii.unit_price}"
+      get "/api/v1/invoice_items/find_all?unit_price=10.0"
       
       expect(response).to be_successful
       returned_invoice_items = JSON.parse(response.body)["data"]
@@ -130,7 +130,7 @@ describe 'Invoice Items API' do
       get "/api/v1/invoice_items/find?quantity=#{@invoice_item.quantity}"
     end
     it 'can find an invoice item by unit_price' do
-      get "/api/v1/invoice_items/find?unit_price=#{@invoice_item.unit_price}"
+      get "/api/v1/invoice_items/find?unit_price=#{@invoice_item.unit_price / 100.0}"
     end
     it 'can find an invoice item by created_at' do
       get "/api/v1/invoice_items/find?created_at=#{@invoice_item.created_at}"

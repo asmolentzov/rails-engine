@@ -70,20 +70,6 @@ describe 'Invoice API' do
       expect(returned_invoices.first["attributes"]["id"]).to eq(invoice.id)
       expect(returned_invoices.last["attributes"]["id"]).to eq(invoice_2.id)
     end
-    
-    it 'can find all invoices by status case insensitive' do
-      invoice = create(:invoice, status: 'success')
-      invoice_2 = create(:invoice, status: 'success')
-      
-      get "/api/v1/invoices/find_all?status=#{invoice.status.upcase}"
-      
-      expect(response).to be_successful
-      
-      returned_invoices = JSON.parse(response.body)["data"]
-      expect(returned_invoices.count).to eq(2)
-      expect(returned_invoices.first["attributes"]["id"]).to eq(invoice.id)
-      expect(returned_invoices.last["attributes"]["id"]).to eq(invoice_2.id)
-    end
   end
   
   describe 'for a single invoice' do
@@ -105,9 +91,6 @@ describe 'Invoice API' do
     end
     it 'can find an invoice by status' do
       get "/api/v1/invoices/find?status=#{@invoice.status}"
-    end
-    it 'can find an invoice by status case insensitive' do
-      get "/api/v1/invoices/find?status=#{@invoice.status.upcase}"
     end
     
     after(:each) do
