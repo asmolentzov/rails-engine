@@ -1,24 +1,16 @@
 class Api::V1::Invoices::SearchController < ApplicationController
   
   def index
-    render json: InvoiceSerializer.new(get_invoices(params))
+    render json: InvoiceSerializer.new(Invoice.where(search_params))
   end
   
   def show
-    render json: InvoiceSerializer.new(get_invoices(params).first)
+    render json: InvoiceSerializer.new(Invoice.where(search_params).first)
   end
   
   private
   
-  def get_invoices(params)
-    if params[:id]
-      Invoice.where(id: params[:id])
-    elsif params[:customer_id]
-      Invoice.where(customer_id: params[:customer_id])
-    elsif params[:merchant_id]  
-      Invoice.where(merchant_id: params[:merchant_id])
-    elsif params[:status]
-      Invoice.where("status ILIKE ?", params[:status])
-    end
+  def search_params
+    params.permit(:id, :customer_id, :merchant_id, :status, :updated_at, :created_at)
   end
 end

@@ -56,7 +56,7 @@ describe 'Item API' do
       item = create(:item, unit_price: 100)
       item_2 = create(:item, unit_price: 100)
       
-      get "/api/v1/items/find_all?unit_price=#{item.unit_price}"
+      get "/api/v1/items/find_all?unit_price=#{item.unit_price / 100.0}"
       
       expect(response).to be_successful
       
@@ -124,7 +124,7 @@ describe 'Item API' do
       get "/api/v1/items/find?description=#{@item.description}"
     end
     it 'can find a single item by its unit_price' do
-      get "/api/v1/items/find?unit_price=#{@item.unit_price}"
+      get "/api/v1/items/find?unit_price=#{@item.unit_price / 100.0}"
     end
     it 'can find a single item by its merchant_id' do
       get "/api/v1/items/find?merchant_id=#{@item.merchant_id}"
